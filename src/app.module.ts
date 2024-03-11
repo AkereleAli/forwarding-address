@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SequelizeModule } from '@nestjs/sequelize';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-    SequelizeModule.forRoot({
-      dialect: 'mysql',
+    TypeOrmModule.forRoot({
+      type: 'mysql',
       host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: '',
       database: 'forwarding-address',
-      autoLoadModels: true,
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
   ],
