@@ -5,9 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { JwtGuard } from 'src/auth/jwt-auth.guard';
+import { Wallet } from 'src/wallet/entities/wallet.entity';
+import { WalletModule } from 'src/wallet/wallet.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User, Wallet]), WalletModule],
   providers: [UserService],
   controllers: [UserController],
   exports: [UserService],

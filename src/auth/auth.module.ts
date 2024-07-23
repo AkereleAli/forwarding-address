@@ -17,6 +17,7 @@ import { MailService } from './mail.service';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User]),
     UserModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

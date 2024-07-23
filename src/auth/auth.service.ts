@@ -12,10 +12,14 @@ import { Role } from 'src/enums/role.enum';
 import { MailService } from './mail.service';
 import { ForgetPasswordDto } from './forget-password.dto';
 import { ResetPasswordDto } from 'src/user/reset-password.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(User)
+    private userRepo: Repository<User>,
     private userService: UserService,
     private jwtService: JwtService,
     private mailService: MailService,
@@ -83,9 +87,9 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(resetPasswordDto.password, 10);
-    resetPasswordDto.password = hashedPassword;
-    await this.userService.update(user.user_id, resetPasswordDto);
-
+    // resetPasswordDto.password = hashedPassword;
+    // await this.userService.update(user.user_id, resetPasswordDto);
+    await this.userRepo.save({ ...user, password: hashedPassword });
     console.log(`after: ${user.password}`);
   }
 }

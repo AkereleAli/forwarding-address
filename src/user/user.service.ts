@@ -7,13 +7,17 @@ import { plainToInstance } from 'class-transformer';
 import { RegisterUserResponseDto } from './response/register-user.dto';
 import { UserDetailsResponseDto } from './response/user-details.dto';
 import { UpdateUserDto } from './update-user.dto';
+import { Wallet } from 'src/wallet/entities/wallet.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    @InjectRepository(Wallet)
+    private walletRepo: Repository<Wallet>,
   ) {}
+
   async registerUser(createUserDto: CreateUserDto): Promise<string> {
     const checkIfuserExists = await this.userRepo.findOne({
       where: { email: createUserDto.email },
@@ -25,6 +29,8 @@ export class UserService {
     await this.userRepo.save(user);
     // const { password, id, user_id, createdAt, updatedAt, ...result } = user;
     // return plainToInstance(RegisterUserResponseDto, user);
+    const walletObj = this.walletRepo.create({ user_id: user.user_id });
+    await this.walletRepo.save(walletObj);
     return `user successfully registered`;
   }
 
